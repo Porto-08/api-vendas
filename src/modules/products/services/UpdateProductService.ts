@@ -22,7 +22,7 @@ export class UpdateProductService {
 
         const productExists = await productsRepository.findByName(name);
 
-        if (productExists) {
+        if (productExists  && name !== product.name) {
             throw new AppError("There is alreay one product with this name.");
         }
 
