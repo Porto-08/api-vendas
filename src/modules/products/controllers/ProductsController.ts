@@ -20,9 +20,7 @@ export class ProductsController {
 
         const showProductService = new ShowProductService();
 
-        const product = await showProductService.execute({
-            id
-        });
+        const product = await showProductService.execute({ id });
 
         return res.json(product);
     }
@@ -32,7 +30,9 @@ export class ProductsController {
         const createProductService = new CreateProductService();
 
         const product = await createProductService.execute({
-            name, price, quantity
+            name,
+            price,
+            quantity
         });
 
         return res.json(product);
@@ -45,7 +45,10 @@ export class ProductsController {
         const updateProductService = new UpdateProductService();
 
         const product = await updateProductService.execute({
-            id, name, price, quantity
+            id,
+            name,
+            price,
+            quantity
         });
 
         return res.json(product);
