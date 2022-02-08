@@ -14,9 +14,9 @@ interface IRequest {
 export class UpdateProductService {
     public async execute({ id, name, price, quantity }: IRequest): Promise<Product> {
         const schema = Yup.object().shape({
-            name: Yup.string().required(),
-            price: Yup.number().required(),
-            quantity: Yup.number().required(),
+            name: Yup.string(),
+            price: Yup.number(),
+            quantity: Yup.number(),
         });
 
         if (!(await schema.isValid({ name, price, quantity }))) {
