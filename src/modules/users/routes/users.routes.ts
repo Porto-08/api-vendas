@@ -1,14 +1,16 @@
 import { Router } from "express";
 import { UsersController } from "../controllers/UsersController";
+import { isAuthenticated } from "../../../shared/http/middlewares/isAuthenticated";
 
 const usersRouter = Router();
 const usersController = new UsersController();
 
-usersRouter.get("/", usersController.index);
-usersRouter.get("/:id", usersController.show);
 usersRouter.post("/", usersController.create);
-// usersRouter.put("/:id", usersController.update);
-usersRouter.delete("/:id", usersController.delete);
+
+usersRouter.get("/", isAuthenticated, usersController.index);
+usersRouter.get("/:id", isAuthenticated, usersController.show);
+// usersRouter.put("/:id", isAuthenticated, usersController.update);
+usersRouter.delete("/:id", isAuthenticated, usersController.delete);
 
 
 export { usersRouter };
