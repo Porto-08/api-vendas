@@ -28,9 +28,9 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
 
         const { id } = decodedToken as TokenPayload;
 
-        // req.user = {
-        //     id
-        // }
+        req.user = {
+            id
+        }
 
         return next();
     } catch (err) {
