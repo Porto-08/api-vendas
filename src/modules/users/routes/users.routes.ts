@@ -19,6 +19,6 @@ usersRouter.get("/:id", isAuthenticated, usersController.show);
 usersRouter.delete("/:id", isAuthenticated, usersController.delete);
 
 // avatar
-usersRouter.patch("/avatar", isAuthenticated, upload.single('avatar'), usersAvatarController.update);
+usersRouter.patch("/avatar", isAuthenticated, upload.single('avatarFilename'), usersAvatarController.update);
 
 export { usersRouter };

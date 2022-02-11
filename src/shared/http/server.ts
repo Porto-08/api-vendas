@@ -5,11 +5,16 @@ import cors from "cors";
 import routes from './routes';
 import AppError from '@shared/errors/AppError';
 import "@shared/typeorm"
+import uploadConfig from '@config/upload';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// rota estática para imagens
+app.use('/files', express.static(uploadConfig.directory));
+
 app.use(routes)
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
@@ -18,7 +23,7 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
             status: 'error',
             message: error.message
         })
-    }    
+    }        
 
     return res.status(500).json({
         status: "error",

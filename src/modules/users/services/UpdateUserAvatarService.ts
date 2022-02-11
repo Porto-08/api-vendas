@@ -13,13 +13,13 @@ interface IRequest {
 }
 
 export class UpdateUserAvatarService {
-    public async execute({ avatarFilename, user_id  }: IRequest): Promise<User> {
+    public async execute({ avatarFilename, user_id }: IRequest): Promise<User> {
         const schema = Yup.object().shape({
             avatarFilename: Yup.string().required(),
             user_id: Yup.string().required(),
         });
 
-        if (!(await schema.isValid({ }))) {
+        if (!(await schema.isValid({ avatarFilename, user_id }))) {
             throw new AppError("Validation error");
         }
 
@@ -32,11 +32,11 @@ export class UpdateUserAvatarService {
         }
 
         // verificando de já há um avatar e excluindo
-        if(user.avatar) {
+        if (user.avatar) {
             const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);
             const userAvatarFileExists = await fs.promises.stat(userAvatarFilePath);
 
-            if (userAvatarFileExists) { 
+            if (userAvatarFileExists) {
                 await fs.promises.unlink(userAvatarFilePath);
             }
         }
