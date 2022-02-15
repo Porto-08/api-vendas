@@ -3,13 +3,13 @@ import { productsRouter } from "@modules/products/routes/products.routes";
 import { usersRouter } from "@modules/users/routes/users.routes";
 import { sessionsRouter } from "@modules/users/routes/sessions.routes";
 import { isAuthenticated } from "@shared/http/middlewares/isAuthenticated";
-import { forgotPasswordRouter } from "@modules/users/routes/forgotPassword.routes";
+import { passwordRouter } from "@modules/users/routes/password.routes";
 
 const routes = Router();
 
 routes.use("/sessions", sessionsRouter);
 routes.use("/users", usersRouter);
-routes.use("/password", forgotPasswordRouter);
+routes.use("/password", passwordRouter);
 
 routes.use("/products", isAuthenticated, productsRouter);
 
