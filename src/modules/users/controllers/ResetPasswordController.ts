@@ -18,5 +18,4 @@ export class ResetPasswordController {
             message: "Password reset sucessfully.",
         });
     }
-
 }
