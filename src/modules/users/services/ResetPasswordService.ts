@@ -8,17 +8,19 @@ import { hash } from "bcryptjs";
 
 interface IRequest {
     password: string;
+    confirmPassword: string;
     token: string;
 }
 
 export class ResetPasswordService {
-    public async execute({ password, token }: IRequest): Promise<void> {
+    public async execute({ password, token, confirmPassword }: IRequest): Promise<void> {
         const schema = Yup.object().shape({
             password: Yup.string().required().min(6),
             token: Yup.string().required(),
+            confirmPassword: Yup.string().required().oneOf([Yup.ref('password')])
         });
 
-        if (!(await schema.isValid({ password, token }))) {
+        if (!(await schema.isValid({ password, token, confirmPassword }))) {
             throw new AppError("Validation error");
         }
 
