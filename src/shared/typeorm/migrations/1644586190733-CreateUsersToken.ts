@@ -24,10 +24,6 @@ export class CreateUsersToken1644586190733 implements MigrationInterface {
                     type: 'uuid',
                 },
                 {
-                    name: 'password',
-                    type: 'varchar',
-                },
-                {
                     name: 'created_at',
                     type: 'timestamp with time zone',
                     default: 'now()',
