@@ -28,11 +28,25 @@ export class SendForgotPasswordEmailService {
             throw new AppError("user does not exists.");
         }
 
-        const token = await userTokensRepository.generate(user.id);
+        const { token } = await userTokensRepository.generate(user.id);
 
         await EtheralMail.sendMail({
-            to: email,
-            body: `Para recuperar sua senha acesse o link: ${token?.token}`
+            to: {
+                name: user.name,
+                email: user.email,
+            },
+            subject: "[API-VENDAS] - Recuperação de Senha",
+            from: {
+                name: "Equipe APi-Vendas",
+                email: "equipe@apivendas.com.br",
+            },
+            templateData: {
+                template: "Olá {{name}}: {{token}}",
+                variables: {
+                    name: user.name,
+                    token
+                }
+            },
         });
     }
 }
