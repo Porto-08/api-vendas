@@ -13,6 +13,10 @@ export class ListUserService {
             throw new AppError("User not found");
         } 
 
+        user.forEach(user => {
+            delete user.password;
+        });
+
         return user;
     }
 }
