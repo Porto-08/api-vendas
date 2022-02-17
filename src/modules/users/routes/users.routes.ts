@@ -16,6 +16,7 @@ usersRouter.post("/", usersController.create);
 
 usersRouter.get("/", isAuthenticated, usersController.index);
 usersRouter.get("/:id", isAuthenticated, usersController.show);
+usersRouter.put("/:id", isAuthenticated, usersController.update);
 usersRouter.delete("/:id", isAuthenticated, usersController.delete);
 
 // avatar

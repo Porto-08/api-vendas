@@ -4,6 +4,7 @@ import { CreateUserService } from "../services/CreateUserService";
 import { DeleteUserService } from "../services/DeleteUserService";
 import { ListUserService } from "../services/ListUserService";
 import { ShowUserService } from "../services/ShowUserService";
+import { UpdateUserService } from "../services/UpdateUserService";
 
 export class UsersController {
     public async index(req: Request, res: Response): Promise<Response> {
@@ -35,6 +36,23 @@ export class UsersController {
             name,
             email,
             password
+        });
+
+        return res.json(user);
+    }
+
+    public async update(req: Request, res: Response): Promise<Response> {
+        const { id } = req.user;
+        const { name, email, password, oldPassword } = req.body;
+
+        const updateUserService = new UpdateUserService();
+
+        const user = await updateUserService.execute({
+            id,
+            name,
+            email,
+            password,
+            oldPassword
         });
 
         return res.json(user);
