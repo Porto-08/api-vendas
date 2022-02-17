@@ -1,12 +1,11 @@
 import nodemailer from "nodemailer";
-
-interface ISendMail {
-    to: string;
-    body: string;
-}
+import { ISendMail } from "src/interfaces";
+import { handlebarsMailTemplate } from "./HandlebarsMailTemplate";
 
 export class EtheralMail {
-    static async sendMail({ to, body }: ISendMail): Promise<void> {
+    static async sendMail({ from, to, subject, templateData }: ISendMail): Promise<void> {
+        const mainTemplate = new handlebarsMailTemplate();
+
         const account = await nodemailer.createTestAccount();
 
         const transporter = nodemailer.createTransport({
@@ -20,10 +19,16 @@ export class EtheralMail {
         });
 
         const message = await transporter.sendMail({
-            from: "equipe@apivendas.com.br",
-            to,
-            subject: "Recuperação de senha",
-            text: body
+            from: {
+                name: from?.name || "Equipe Vendas",
+                address: from?.email || "equipe@apivendas.com.br",
+            },
+            to: {
+                name: to.name,
+                address: to.email
+            },
+            subject,
+            html: await mainTemplate.parse(templateData),
         })
 
         console.log("Message sent: %s", message.messageId);
