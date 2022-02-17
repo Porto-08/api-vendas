@@ -26,6 +26,8 @@ export class ShowUserService {
             throw new AppError("User not found.");
         }
 
+        delete user.password;
+
         return user;
     }
 }
