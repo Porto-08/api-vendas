@@ -1,3 +1,4 @@
+import { Customer } from "@modules/customers/typeorm/entities/Customer";
 
 export interface IMailContact {
     name: string;
@@ -17,4 +18,13 @@ export interface ITemplateVariable {
 export interface IParseMailTemplate {
     file: string;
     variables: ITemplateVariable;
+}
+
+export interface ICreateOrder {
+    customer: Customer;
+    products: [{
+        product_id: string;
+        quantity: number;
+        price: number;
+    }];
 }
