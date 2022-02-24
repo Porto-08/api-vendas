@@ -19,12 +19,12 @@ export interface IParseMailTemplate {
     file: string;
     variables: ITemplateVariable;
 }
-
+interface IProduct {
+    product_id: string;
+    price: number;
+    quantity: number;
+}
 export interface ICreateOrder {
     customer: Customer;
-    products: [{
-        product_id: string;
-        quantity: number;
-        price: number;
-    }];
+    products: IProduct[];
 }
