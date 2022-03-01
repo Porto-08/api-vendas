@@ -20,8 +20,13 @@ interface IRequest {
 export class CreateOrderService {
     public async execute({ customer_id, products }: IRequest): Promise<Order> {
         const schema = Yup.object().shape({
-            customer: Yup.string().required(),
-            products: Yup.array().required(),
+            customer_id: Yup.string().required(),
+            products: Yup.array().of(
+                Yup.object().shape({
+                    id: Yup.string().required(),
+                    quantity: Yup.number().required(),
+                })
+            ),
         });
 
         if (!(await schema.isValid({ customer_id, products }))) {
@@ -69,9 +74,9 @@ export class CreateOrderService {
             products: serializedProducts,
         });
 
-        const { order_products } = order;
+        const { orders_products } = order;
 
-        const updatedProductQuantity = order_products.map(
+        const updatedProductQuantity = orders_products.map(
             product => ({
                 id: product.product_id,
                 quantity: productsExists.filter(productsExists => productsExists.id === product.product_id)[0].quantity - product.quantity,

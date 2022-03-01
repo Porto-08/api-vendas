@@ -6,11 +6,15 @@ import routes from './routes';
 import AppError from '@shared/errors/AppError';
 import "@shared/typeorm"
 import uploadConfig from '@config/upload';
+import { pagination } from 'typeorm-pagination';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// midleware para permitir paginação
+app.use(pagination)
 
 // rota estática para imagens
 app.use('/files', express.static(uploadConfig.directory));
@@ -23,10 +27,10 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
             status: 'error',
             message: error.message
         })
-    }   
-    
+    }
+
     console.log(error);
-    
+
 
     return res.status(500).json({
         status: "error",

@@ -7,7 +7,7 @@ export class OrdersRepository extends Repository<Order> {
 
     public async findById(id: string): Promise<Order | undefined> {
         const order = await this.findOne(id, {
-            relations: ["customer", "order_products"]
+            relations: ["customer", "orders_products"]
         });
 
         return order;
@@ -16,7 +16,7 @@ export class OrdersRepository extends Repository<Order> {
     public async createOrder({ customer, products }: ICreateOrder): Promise<Order> {
         const order = this.create({
             customer,
-            order_products: products,
+            orders_products: products,
         });
         
         await this.save(order);

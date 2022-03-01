@@ -4,7 +4,7 @@ export class AddOrderIdToOrdersProducts1645207839518 implements MigrationInterfa
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.addColumn(
-            'order_products',
+            'orders_products',
             new TableColumn({
                     name: 'order_id',
                     type: 'uuid',
@@ -14,7 +14,7 @@ export class AddOrderIdToOrdersProducts1645207839518 implements MigrationInterfa
         );
 
         await queryRunner.createForeignKey(
-            'order_products',
+            'orders_products',
             new TableForeignKey({
                 name: 'OrdersProductsOrder',
                 columnNames: ['order_id'],
@@ -26,8 +26,8 @@ export class AddOrderIdToOrdersProducts1645207839518 implements MigrationInterfa
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropForeignKey('order_products', 'OrdersProductsOrder');
-        await queryRunner.dropColumn('order_products', 'order_id')
+        await queryRunner.dropForeignKey('orders_products', 'OrdersProductsOrder');
+        await queryRunner.dropColumn('orders_products', 'order_id')
     }
 
 }
