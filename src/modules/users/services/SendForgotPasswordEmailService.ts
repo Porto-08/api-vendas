@@ -48,7 +48,7 @@ export class SendForgotPasswordEmailService {
                 variables: {
                     name: user.name,
                     from: "Equipe API-Vendas",
-                    link: `localhost:3000/reset_password?token=${token}`,
+                    link: `${process.env.APP_API_URL}/reset_password?token=${token}`,
                 }
             },
         });

@@ -64,9 +64,6 @@ export class UpdateUserService {
         user.name = name || user.name;
         user.email = email || user.email;
         
-
-        delete user.password;
-
         return user;
     }
 }

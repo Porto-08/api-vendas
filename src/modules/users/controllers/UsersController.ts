@@ -5,6 +5,7 @@ import { DeleteUserService } from "../services/DeleteUserService";
 import { ListUserService } from "../services/ListUserService";
 import { ShowUserService } from "../services/ShowUserService";
 import { UpdateUserService } from "../services/UpdateUserService";
+import { instanceToInstance } from "class-transformer";
 
 export class UsersController {
     public async index(req: Request, res: Response): Promise<Response> {
@@ -12,7 +13,7 @@ export class UsersController {
 
         const users = await listUserService.execute();
 
-        return res.json(users);
+        return res.json(instanceToInstance(users));
     }
 
     public async show(req: Request, res: Response): Promise<Response> {
@@ -24,7 +25,7 @@ export class UsersController {
             id
         });
 
-        return res.json(user);
+        return res.json(instanceToInstance(user));
     }
 
     public async create(req: Request, res: Response): Promise<Response> {
@@ -38,7 +39,7 @@ export class UsersController {
             password
         });
 
-        return res.json(user);
+        return res.json(instanceToInstance(user));
     }
 
     public async update(req: Request, res: Response): Promise<Response> {
@@ -55,7 +56,7 @@ export class UsersController {
             oldPassword
         });
 
-        return res.json(user);
+        return res.json(instanceToInstance(user));
     }
 
     public async delete(req: Request, res: Response): Promise<Response> {

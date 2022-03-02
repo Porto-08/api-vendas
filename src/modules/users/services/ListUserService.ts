@@ -13,11 +13,6 @@ export class ListUserService {
         if(!user) {
             throw new AppError("User not found");
         } 
-
-        user.data.forEach((user: User) =>  {
-            delete user.password;
-        });
-
         
         return user as IPaginateUsers;
     }
