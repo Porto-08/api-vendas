@@ -6,7 +6,6 @@ export class RedisCache {
 
     constructor() {
         this.client = new Redis(cacheConfig.config.redis);
-
     }
 
     // salvar dados no cache

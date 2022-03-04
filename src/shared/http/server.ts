@@ -8,19 +8,16 @@ import AppError from '@shared/errors/AppError';
 import "@shared/typeorm"
 import uploadConfig from '@config/upload';
 import { pagination } from 'typeorm-pagination';
+import { rateLimiter } from './middlewares/rateLimiter';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-// midleware para permitir paginação
-app.use(pagination)
-
-// rota estática para imagens
-app.use('/files', express.static(uploadConfig.directory));
-
-app.use(routes)
+app.use(rateLimiter); // => // middleware para controle de requisições
+app.use(pagination) // => midleware para permitir paginação
+app.use('/files', express.static(uploadConfig.directory)); // => rota estática para imagens
+app.use(routes) // => rotas
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof AppError) {
