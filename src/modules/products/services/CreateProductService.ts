@@ -1,17 +1,13 @@
+import { ICreateProduct } from '@modules/products/domain/models/iCreateProduct';
 import { RedisCache } from '@shared/cache/RedisCache';
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm"
 import { Product } from "../infra/typeorm/entities/Product";
 import { ProductsRepository } from "../infra/typeorm/repositories/ProductsRepository";
 import * as Yup from "yup";
-interface IRequest {
-    name: string;
-    price: number;
-    quantity: number;
-}
 
 export class CreateProductService {
-    public async execute({ name, price, quantity }: IRequest): Promise<Product> {
+    public async execute({ name, price, quantity }: ICreateProduct): Promise<Product> {
         const schema = Yup.object().shape({
             name: Yup.string().required(),
             price: Yup.number().required(),

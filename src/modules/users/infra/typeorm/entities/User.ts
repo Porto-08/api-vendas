@@ -1,9 +1,10 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Exclude, Expose } from "class-transformer";
+import { IUser } from "@modules/users/domain/models/IUsers";
 
 
 @Entity('users')
-export class User {
+export class User implements IUser {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -28,10 +29,10 @@ export class User {
 
     @Expose({ name: 'avatar_url' })
     getAvatarUrl(): string | null {
-        if(!this.avatar) {
+        if (!this.avatar) {
             return null;
         }
-        
+
         return `${process.env.APP_API_URL}/files/${this.avatar}`;
     }
 }

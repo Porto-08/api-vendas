@@ -5,20 +5,16 @@ import { OrdersRepository } from '../infra/typeorm/repositories/OrdersRepository
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm"
 import * as Yup from "yup";
+import { ICreateOrder } from '../domain/models/ICreateOrder';
 
 
-interface IProducts {
+export interface IProducts {
     id: string;
     quantity: number;
 }
 
-interface IRequest {
-    customer_id: string;
-    products: IProducts[];
-}
-
 export class CreateOrderService {
-    public async execute({ customer_id, products }: IRequest): Promise<Order> {
+    public async execute({ customer_id, products }: ICreateOrder): Promise<Order> {
         const schema = Yup.object().shape({
             customer_id: Yup.string().required(),
             products: Yup.array().of(

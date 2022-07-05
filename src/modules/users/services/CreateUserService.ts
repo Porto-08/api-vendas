@@ -4,15 +4,12 @@ import { User } from "../infra/typeorm/entities/User";
 import { UsersRepository } from "@modules/users/infra/typeorm/repositories/UsersRepository";
 import * as Yup from "yup";
 import { hash } from "bcryptjs";
+import { ICreateUser } from "@modules/users/domain/models/ICreateUser";
 
-interface IRequest {
-    name: string;
-    email: string;
-    password: string;
-}
+
 
 export class CreateUserService {
-    public async execute({ name, email, password }: IRequest): Promise<User> {
+    public async execute({ name, email, password }: ICreateUser): Promise<User> {
         const schema = Yup.object().shape({
             name: Yup.string().required(),
             email: Yup.string().required().email(),

@@ -1,6 +1,6 @@
 import AppError from "@shared/errors/AppError";
 import { NextFunction, Request, Response } from "express";
-import authConfig from "../../../config/auth"
+import authConfig from "../../../../config/auth"
 import jwt from "jsonwebtoken";
 
 interface TokenPayload {

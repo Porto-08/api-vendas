@@ -1,9 +1,10 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { IOrderProducts } from './../../../domain/models/IOrderproducts';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Product } from "../../../../products/infra/typeorm/entities/Product";
 import { Order } from "./Orders";
 
 @Entity('orders_products')
-export class OrderProducts {
+export class OrderProducts implements IOrderProducts {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -15,16 +16,11 @@ export class OrderProducts {
   @JoinColumn({ name: 'product_id' })
   product: Product;
 
-  // @Column('decimal')
   @Column()
   product_id: string;
 
-  // @Column('decimal')
   @Column()
   order_id: string;
-
-  // @Column('decimal')
-  // customer: number;
 
   @Column('decimal')
   price: number;

@@ -1,16 +1,12 @@
 import AppError from "@shared/errors/AppError";
-import * as Yup from "yup";
+import { ICreateCustomer } from './../domain/models/ICreateCustomer';
 import { getCustomRepository } from "typeorm"
 import { Customer } from "../infra/typeorm/entities/Customer";
 import { CustomersRepository } from "../infra/typeorm/repositories/CustomersRepository";
-
-interface IRequest {
-    name: string;
-    email: string;
-}
+import * as Yup from "yup";
 
 export class CreateCustomerService {
-    public async execute({ name, email }: IRequest): Promise<Customer> {
+    public async execute({ name, email }: ICreateCustomer): Promise<Customer> {
         const schema = Yup.object().shape({
             name: Yup.string().required(),
             email: Yup.string().required().email(),
