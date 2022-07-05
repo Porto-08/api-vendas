@@ -1,7 +1,7 @@
 import { IPaginateProduct } from './../../../interfaces/index';
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm";
-import { ProductsRepository } from "../typeorm/repositories/ProductsRepository";
+import { ProductsRepository } from "../infra/typeorm/repositories/ProductsRepository";
 import { RedisCache } from '@shared/cache/RedisCache';
 import { PaginationAwareObject } from 'typeorm-pagination/dist/helpers/pagination';
 export class ListProductService {
@@ -18,9 +18,9 @@ export class ListProductService {
             await redisCache.save(key, products);
         }
 
-        if(!products) {
+        if (!products) {
             throw new AppError("Products not found");
-        } 
+        }
 
         return products as IPaginateProduct;
     }

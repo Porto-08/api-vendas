@@ -1,7 +1,7 @@
 import AppError from "@shared/errors/AppError";
 import { IPaginateCustomer } from './../../../interfaces/index';
 import { getCustomRepository } from "typeorm";
-import { CustomersRepository } from "../typeorm/repositories/CustomersRepository";
+import { CustomersRepository } from "../infra/typeorm/repositories/CustomersRepository";
 
 export class ListCustomerService {
     public async execute(): Promise<IPaginateCustomer> {

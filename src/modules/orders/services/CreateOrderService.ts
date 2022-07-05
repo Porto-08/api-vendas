@@ -1,7 +1,7 @@
-import { ProductsRepository } from './../../products/typeorm/repositories/ProductsRepository';
-import { CustomersRepository } from './../../customers/typeorm/repositories/CustomersRepository';
-import { Order } from './../typeorm/entities/Orders';
-import { OrdersRepository } from './../typeorm/repositories/OrdersRepository';
+import { ProductsRepository } from '../../products/infra/typeorm/repositories/ProductsRepository';
+import { CustomersRepository } from '../../customers/infra/typeorm/repositories/CustomersRepository';
+import { Order } from '../infra/typeorm/entities/Orders';
+import { OrdersRepository } from '../infra/typeorm/repositories/OrdersRepository';
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm"
 import * as Yup from "yup";

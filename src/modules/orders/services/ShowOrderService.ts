@@ -1,5 +1,5 @@
-import { OrdersRepository } from './../typeorm/repositories/OrdersRepository';
-import { Order } from './../typeorm/entities/Orders';
+import { OrdersRepository } from '../infra/typeorm/repositories/OrdersRepository';
+import { Order } from '../infra/typeorm/entities/Orders';
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm";
 import * as Yup from "yup";
@@ -22,7 +22,7 @@ export class ShowOrderService {
 
         const order = await ordersRepository.findById(id);
 
-        if(!order) {
+        if (!order) {
             throw new AppError("Order not found.");
         }
 

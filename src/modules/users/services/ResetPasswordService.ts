@@ -1,9 +1,9 @@
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm"
 import { isAfter, addHours } from "date-fns"
-import { UsersRepository } from "../typeorm/repositories/UsersRepository";
+import { UsersRepository } from "@modules/users/infra/typeorm/repositories/UsersRepository";
 import * as Yup from "yup";
-import { UserTokensRepository } from "../typeorm/repositories/UserTokensRepository";
+import { UserTokensRepository } from "@modules/users/infra/typeorm/repositories/UserTokensRepository";
 import { hash } from "bcryptjs";
 
 interface IRequest {
@@ -42,7 +42,7 @@ export class ResetPasswordService {
         const tokenCreatedAt = userToken.created_at;
         const compareDate = addHours(tokenCreatedAt, 2);
 
-        if(isAfter(Date.now(), compareDate)) {
+        if (isAfter(Date.now(), compareDate)) {
             throw new AppError("Token expired, restart again.");
         }
 

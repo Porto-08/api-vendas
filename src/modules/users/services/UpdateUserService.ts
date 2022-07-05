@@ -1,7 +1,7 @@
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm";
-import { User } from "../typeorm/entities/User";
-import { UsersRepository } from "../typeorm/repositories/UsersRepository";
+import { User } from "../infra/typeorm/entities/User";
+import { UsersRepository } from "@modules/users/infra/typeorm/repositories/UsersRepository";
 import * as Yup from "yup";
 import { compare, hash } from "bcryptjs";
 
@@ -19,7 +19,7 @@ export class UpdateUserService {
         name,
         email,
         password,
-        oldPassword 
+        oldPassword
     }: IRequest): Promise<User | undefined> {
         const schema = Yup.object().shape({
             id: Yup.string().required(),
@@ -49,12 +49,12 @@ export class UpdateUserService {
             if (userWithEmail) {
                 throw new AppError("Email already in use.");
             }
-        }        
+        }
 
-        if(password && oldPassword && user.password) {
+        if (password && oldPassword && user.password) {
             const isOldPasswordValid = await compare(oldPassword, user.password);
 
-            if(!isOldPasswordValid) {
+            if (!isOldPasswordValid) {
                 throw new AppError("Old password does not match.");
             }
 
@@ -63,7 +63,7 @@ export class UpdateUserService {
 
         user.name = name || user.name;
         user.email = email || user.email;
-        
+
         return user;
     }
 }

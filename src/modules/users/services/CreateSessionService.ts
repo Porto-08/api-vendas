@@ -1,7 +1,6 @@
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm"
-import { User } from "../typeorm/entities/User";
-import { UsersRepository } from "../typeorm/repositories/UsersRepository";
+import { UsersRepository } from "@modules/users/infra/typeorm/repositories/UsersRepository";
 import * as Yup from "yup";
 import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
@@ -39,13 +38,13 @@ export class CreateSessionService {
             throw new AppError("Email/Password incorrect", 401);
         }
 
-        const passwordMatched = await compare(password, user.password);
+        const passwordMatched = await compare(password, user.password as string);
 
         if (!passwordMatched) {
             throw new AppError("Email/Password incorrect", 401);
         }
 
-        const token = sign({ id: user.id, name: user.name }, authConfig.jwt.secret, {
+        const token = sign({ id: user.id, name: user.name }, authConfig.jwt.secret as string, {
             subject: user.id,
             expiresIn: authConfig.jwt.expiresIn,
         });

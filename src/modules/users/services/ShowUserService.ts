@@ -1,7 +1,7 @@
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm";
-import { User } from "../typeorm/entities/User";
-import { UsersRepository } from "../typeorm/repositories/UsersRepository";
+import { User } from "@modules/users/infra/typeorm/entities/User";
+import { UsersRepository } from "@modules/users/infra/typeorm/repositories/UsersRepository";
 import * as Yup from "yup";
 
 interface IRequest {
@@ -22,7 +22,7 @@ export class ShowUserService {
 
         const user = await usersRepository.findOne(id);
 
-        if(!user) {
+        if (!user) {
             throw new AppError("User not found.");
         }
 
