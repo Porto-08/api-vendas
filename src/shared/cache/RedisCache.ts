@@ -6,6 +6,12 @@ export class RedisCache {
 
     constructor() {
         this.client = new Redis(cacheConfig.config.redis);
+
+        this.client.connect().then(() => {
+            console.log('Redis client connected');
+        }).catch(() => {
+            console.log('Redis client disconnected');
+        });
     }
 
     // salvar dados no cache

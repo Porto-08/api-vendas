@@ -1,12 +1,18 @@
-import AppError from "@shared/errors/AppError";
+import { ICustomersRepository } from '@modules/customers/domain/repositories/ICustomersRepository';
 import { ICreateCustomer } from './../domain/models/ICreateCustomer';
-import { getCustomRepository } from "typeorm"
-import { Customer } from "../infra/typeorm/entities/Customer";
-import { CustomersRepository } from "../infra/typeorm/repositories/CustomersRepository";
+import { ICustomer } from '../domain/models/ICustomer';
+import AppError from "@shared/errors/AppError";
 import * as Yup from "yup";
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class CreateCustomerService {
-    public async execute({ name, email }: ICreateCustomer): Promise<Customer> {
+    constructor(
+        @inject('CustomersRepository')
+        private customersRepository: ICustomersRepository
+    ) { }
+
+    public async execute({ name, email }: ICreateCustomer): Promise<ICustomer> {
         const schema = Yup.object().shape({
             name: Yup.string().required(),
             email: Yup.string().required().email(),
@@ -16,20 +22,16 @@ export class CreateCustomerService {
             throw new AppError("Validation error");
         }
 
-        const customersRepository = getCustomRepository(CustomersRepository);
-
-        const emailExists = await customersRepository.findByEmail(email);
+        const emailExists = await this.customersRepository.findByEmail(email);
 
         if (emailExists) {
             throw new AppError("There is alreay one customer with this email.");
         }
 
-        const customer = customersRepository.create({
+        const customer = await this.customersRepository.create({
             name,
             email,
         });
-
-        await customersRepository.save(customer);
 
         return customer;
     }
