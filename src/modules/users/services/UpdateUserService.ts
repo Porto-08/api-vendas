@@ -1,9 +1,9 @@
 import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
-import { inject, injectable } from 'tsyringe';
 import AppError from "@shared/errors/AppError";
 import { User } from "../infra/typeorm/entities/User";
 import * as Yup from "yup";
 import { compare, hash } from "bcryptjs";
+import { inject, injectable } from "tsyringe";
 
 interface IRequest {
     id: string;
@@ -13,10 +13,10 @@ interface IRequest {
     oldPassword?: string;
 }
 
-injectable()
+@injectable()
 export class UpdateUserService {
     constructor(
-        @inject("UsersRepository")
+        @inject('UsersRepository')
         private usersRepository: IUsersRepository
     ) { }
 

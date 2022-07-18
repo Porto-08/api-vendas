@@ -1,6 +1,5 @@
 import { container } from 'tsyringe';
 import { Request, Response } from "express";
-import { CreateSessionService } from "../../../services/CreateSessionService";
 import { CreateUserService } from "../../../services/CreateUserService";
 import { DeleteUserService } from "../../../services/DeleteUserService";
 import { ListUserService } from "../../../services/ListUserService";
