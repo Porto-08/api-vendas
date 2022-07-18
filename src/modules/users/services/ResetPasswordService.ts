@@ -15,8 +15,8 @@ interface IRequest {
 @injectable()
 export class ResetPasswordService {
     constructor(
-        @inject('UsersTokenRepository')
-        private usersTokenRepository: IUsersTokenRepository,
+        @inject('UsersTokensRepository')
+        private usersTokensRepository: IUsersTokenRepository,
 
         @inject('UsersRepository')
         private usersRepository: IUsersRepository
@@ -33,7 +33,7 @@ export class ResetPasswordService {
             throw new AppError("Validation error");
         }
 
-        const userToken = await this.usersTokenRepository.findByToken(token);
+        const userToken = await this.usersTokensRepository.findByToken(token);
 
         if (!userToken) {
             throw new AppError("User token does not exists.");

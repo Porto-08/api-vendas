@@ -16,8 +16,8 @@ interface IRequest {
 @injectable()
 export class SendForgotPasswordEmailService {
     constructor(
-        @inject('UsersTokenRepository')
-        private usersTokenRepository: IUsersTokenRepository,
+        @inject('UsersTokensRepository')
+        private usersTokensRepository: IUsersTokenRepository,
 
         @inject('UsersRepository')
         private usersRepository: IUsersRepository
@@ -38,7 +38,7 @@ export class SendForgotPasswordEmailService {
             throw new AppError("User does not exists.");
         }
 
-        const { token } = await this.usersTokenRepository.generate(user.id);
+        const { token } = await this.usersTokensRepository.generate(user.id);
 
         const forgotPasswordTemplate = path.resolve(__dirname, "..", "views", "forgot_password.hbs");
 
