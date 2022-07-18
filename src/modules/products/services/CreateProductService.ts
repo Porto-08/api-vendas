@@ -1,9 +1,7 @@
 import { ICreateProduct } from '@modules/products/domain/models/ICreateProduct';
 import { RedisCache } from '@shared/cache/RedisCache';
 import AppError from "@shared/errors/AppError";
-import { getCustomRepository } from "typeorm"
 import { Product } from "../infra/typeorm/entities/Product";
-import { ProductsRepository } from "../infra/typeorm/repositories/ProductsRepository";
 import * as Yup from "yup";
 import { inject, injectable } from 'tsyringe';
 import { IProductsRepository } from '@modules/products/domain/repositories/IProductsRepository';

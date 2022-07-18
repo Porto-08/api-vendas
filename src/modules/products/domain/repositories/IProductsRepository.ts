@@ -1,6 +1,7 @@
 import { IPaginateProduct } from "src/interfaces";
-import { ICreateProduct } from "../models/ICreateProduct";
-import { IProduct } from "../models/IProduct";
+import { IProduct } from "../models/IProduct"
+import { ICreateProduct } from "../models/ICreateProduct"
+
 
 export interface IProductsRepository {
   findById(id: string): Promise<IProduct | undefined>
