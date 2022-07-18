@@ -7,6 +7,7 @@ import { inject, injectable } from 'tsyringe';
 import { IOrdersRepository } from '../domain/repositories/IOrdersRepository';
 import { ICustomersRepository } from '@modules/customers/domain/repositories/ICustomersRepository';
 import { IProductsRepository } from '@modules/products/domain/repositories/IProductsRepository';
+import { RedisCache } from '@shared/cache/RedisCache';
 
 
 export interface IProducts {
@@ -89,6 +90,9 @@ export class CreateOrderService {
         );
 
         await this.productsRepository.save(updatedProductQuantity);
+
+        const redisCache = new RedisCache();
+        await redisCache.invalidate('api-vendas-PRODUCTS_LIST');
 
         return order;
     }
