@@ -1,18 +1,22 @@
+import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
 import { IPaginateUsers } from './../../../interfaces/index';
 import AppError from "@shared/errors/AppError";
-import { getCustomRepository } from "typeorm";
-import { UsersRepository } from "@modules/users/infra/typeorm/repositories/UsersRepository";
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class ListUserService {
-    public async execute(): Promise<IPaginateUsers> {
-        const usersRepository = getCustomRepository(UsersRepository);
+    constructor(
+        @inject('UsersRepository')
+        private usersRepository: IUsersRepository
+    ) { }
 
-        const user = await usersRepository.createQueryBuilder().paginate();
+    public async execute(): Promise<IPaginateUsers> {
+        const user = await this.usersRepository.list();
 
         if (!user) {
             throw new AppError("User not found");
         }
 
-        return user as IPaginateUsers;
+        return user;
     }
 }

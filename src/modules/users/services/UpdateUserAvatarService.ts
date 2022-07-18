@@ -1,18 +1,23 @@
+import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
 import AppError from "@shared/errors/AppError";
-import { getCustomRepository } from "typeorm"
 import { User } from "../infra/typeorm/entities/User";
-import { UsersRepository } from "@modules/users/infra/typeorm/repositories/UsersRepository";
 import * as Yup from "yup";
 import path from "path";
 import uploadConfig from "../../../config/upload";
 import fs from "fs";
+import { inject, injectable } from "tsyringe";
 
 interface IRequest {
     user_id: string;
     avatarFilename: string;
 }
-
+@injectable()
 export class UpdateUserAvatarService {
+    constructor(
+        @inject("UsersRepository")
+        private usersRepository: IUsersRepository
+    ) { }
+
     public async execute({ avatarFilename, user_id }: IRequest): Promise<User> {
         const schema = Yup.object().shape({
             avatarFilename: Yup.string().required(),
@@ -23,9 +28,7 @@ export class UpdateUserAvatarService {
             throw new AppError("Validation error");
         }
 
-        const usersRepository = getCustomRepository(UsersRepository);
-
-        const user = await usersRepository.findById(user_id);
+        const user = await this.usersRepository.findById(user_id);
 
         if (!user) {
             throw new AppError("User not found.", 401);
@@ -43,7 +46,7 @@ export class UpdateUserAvatarService {
 
         user.avatar = avatarFilename;
 
-        await usersRepository.save(user);
+        await this.usersRepository.save(user);
 
         return user;
     }

@@ -1,7 +1,7 @@
+import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
+import { inject, injectable } from 'tsyringe';
 import AppError from "@shared/errors/AppError";
-import { getCustomRepository } from "typeorm";
 import { User } from "../infra/typeorm/entities/User";
-import { UsersRepository } from "@modules/users/infra/typeorm/repositories/UsersRepository";
 import * as Yup from "yup";
 import { compare, hash } from "bcryptjs";
 
@@ -13,7 +13,14 @@ interface IRequest {
     oldPassword?: string;
 }
 
+injectable()
 export class UpdateUserService {
+    constructor(
+        @inject("UsersRepository")
+        private usersRepository: IUsersRepository
+    ) { }
+
+
     public async execute({
         id,
         name,
@@ -35,16 +42,14 @@ export class UpdateUserService {
             throw new AppError("Validation error");
         }
 
-        const usersRepository = getCustomRepository(UsersRepository);
-
-        const user = await usersRepository.findById(id);
+        const user = await this.usersRepository.findById(id);
 
         if (!user) {
             throw new AppError("User not found.");
         }
 
         if (email && email !== user.email) {
-            const userWithEmail = await usersRepository.findByEmail(email);
+            const userWithEmail = await this.usersRepository.findByEmail(email);
 
             if (userWithEmail) {
                 throw new AppError("Email already in use.");
@@ -63,6 +68,8 @@ export class UpdateUserService {
 
         user.name = name || user.name;
         user.email = email || user.email;
+
+        await this.usersRepository.save(user);
 
         return user;
     }
