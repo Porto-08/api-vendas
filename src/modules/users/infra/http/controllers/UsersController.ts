@@ -1,3 +1,4 @@
+import { container } from 'tsyringe';
 import { Request, Response } from "express";
 import { CreateSessionService } from "../../../services/CreateSessionService";
 import { CreateUserService } from "../../../services/CreateUserService";
@@ -9,7 +10,7 @@ import { instanceToInstance } from "class-transformer";
 
 export class UsersController {
     public async index(req: Request, res: Response): Promise<Response> {
-        const listUserService = new ListUserService();
+        const listUserService = container.resolve(ListUserService);
 
         const users = await listUserService.execute();
 
@@ -19,7 +20,7 @@ export class UsersController {
     public async show(req: Request, res: Response): Promise<Response> {
         const { id } = req.params;
 
-        const showUserService = new ShowUserService();
+        const showUserService = container.resolve(ShowUserService);
 
         const user = await showUserService.execute({
             id
@@ -31,7 +32,7 @@ export class UsersController {
     public async create(req: Request, res: Response): Promise<Response> {
         const { name, email, password } = req.body;
 
-        const createUserService = new CreateUserService();
+        const createUserService = container.resolve(CreateUserService);
 
         const user = await createUserService.execute({
             name,
@@ -46,7 +47,7 @@ export class UsersController {
         const { id } = req.user;
         const { name, email, password, oldPassword } = req.body;
 
-        const updateUserService = new UpdateUserService();
+        const updateUserService = container.resolve(UpdateUserService);
 
         const user = await updateUserService.execute({
             id,
@@ -62,7 +63,7 @@ export class UsersController {
     public async delete(req: Request, res: Response): Promise<Response> {
         const { id } = req.params;
 
-        const deleteUserService = new DeleteUserService();
+        const deleteUserService = container.resolve(DeleteUserService);
 
         await deleteUserService.execute({
             id
