@@ -8,6 +8,8 @@ import { IUsersRepository } from "@modules/users/domain/repositories/IUsersRepos
 import { UsersRepository } from "@modules/users/infra/typeorm/repositories/UsersRepository";
 import { IUsersTokenRepository } from "@modules/users/domain/repositories/IUsersTokenRepository";
 import { UsersTokensRepository } from "@modules/users/infra/typeorm/repositories/UserTokensRepository";
+import { IOrdersRepository } from "@modules/orders/domain/repositories/IOrdersRepository";
+import { OrdersRepository } from "@modules/orders/infra/typeorm/repositories/OrdersRepository";
 
 container.registerSingleton<ICustomersRepository>(
   'CustomersRepository',
@@ -27,5 +29,10 @@ container.registerSingleton<IUsersRepository>(
 container.registerSingleton<IUsersTokenRepository>(
   'UsersTokensRepository',
   UsersTokensRepository
+)
+
+container.registerSingleton<IOrdersRepository>(
+  'OrdersRepository',
+  OrdersRepository
 );
 
