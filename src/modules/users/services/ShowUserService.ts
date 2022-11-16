@@ -1,14 +1,21 @@
+import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
 import AppError from "@shared/errors/AppError";
-import { getCustomRepository } from "typeorm";
-import { User } from "../typeorm/entities/User";
-import { UsersRepository } from "../typeorm/repositories/UsersRepository";
+import { User } from "@modules/users/infra/typeorm/entities/User";
 import * as Yup from "yup";
+import { inject, injectable } from "tsyringe";
 
 interface IRequest {
     id: string;
 }
 
+@injectable()
 export class ShowUserService {
+    constructor(
+        @inject("UsersRepository")
+        private usersRepository: IUsersRepository
+    ) { }
+
+
     public async execute({ id }: IRequest): Promise<User | undefined> {
         const schema = Yup.object().shape({
             id: Yup.string().required(),
@@ -18,11 +25,9 @@ export class ShowUserService {
             throw new AppError("Validation error");
         }
 
-        const usersRepository = getCustomRepository(UsersRepository);
+        const user = await this.usersRepository.findById(id);
 
-        const user = await usersRepository.findOne(id);
-
-        if(!user) {
+        if (!user) {
             throw new AppError("User not found.");
         }
 

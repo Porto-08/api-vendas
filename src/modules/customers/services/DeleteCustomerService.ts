@@ -1,13 +1,20 @@
 import AppError from "@shared/errors/AppError";
-import { getCustomRepository } from "typeorm";
+import { inject, injectable } from "tsyringe";
 import * as Yup from "yup";
-import { CustomersRepository } from "../typeorm/repositories/CustomersRepository";
+import { ICustomersRepository } from "../domain/repositories/ICustomersRepository";
+import { CustomersRepository } from "../infra/typeorm/repositories/CustomersRepository";
 
 interface IRequest {
     id: string;
 }
 
+@injectable()
 export class DeleteCustomerService {
+    constructor(
+        @inject('CustomersRepository')
+        private customersRepository: ICustomersRepository
+    ) { }
+
     public async execute({ id }: IRequest): Promise<void> {
         const schema = Yup.object().shape({
             id: Yup.string().required(),
@@ -17,14 +24,12 @@ export class DeleteCustomerService {
             throw new AppError("Validation error");
         }
 
-        const customersRepository = getCustomRepository(CustomersRepository);
-
-        const customer = await customersRepository.findOne(id);
+        const customer = await this.customersRepository.findById(id);
 
         if (!customer) {
             throw new AppError("Customer not found.");
         }
 
-        await customersRepository.remove(customer);
+        this.customersRepository.remove(customer);
     }
 }

@@ -1,9 +1,11 @@
+import { ICustomersRepository } from '@modules/customers/domain/repositories/ICustomersRepository';
 import AppError from "@shared/errors/AppError";
 import { getCustomRepository } from "typeorm";
 import * as Yup from "yup";
 import { compare, hash } from "bcryptjs";
-import { Customer } from "../typeorm/entities/Customer";
-import { CustomersRepository } from "../typeorm/repositories/CustomersRepository";
+import { Customer } from "../infra/typeorm/entities/Customer";
+import { CustomersRepository } from "../infra/typeorm/repositories/CustomersRepository";
+import { inject, injectable } from "tsyringe";
 
 interface IRequest {
     id: string;
@@ -11,7 +13,13 @@ interface IRequest {
     email?: string;
 }
 
+@injectable()
 export class UpdateCustomerService {
+    constructor(
+        @inject('CustomersRepository')
+        private customersRepository: ICustomersRepository
+    ) { }
+
     public async execute({
         id,
         name,
@@ -27,16 +35,14 @@ export class UpdateCustomerService {
             throw new AppError("Validation error");
         }
 
-        const customersRepository = getCustomRepository(CustomersRepository);
-
-        const customer = await customersRepository.findById(id);
+        const customer = await this.customersRepository.findById(id);
 
         if (!customer) {
             throw new AppError("customer not found.");
         }
 
         if (email && email !== customer.email) {
-            const customerWithEmail = await customersRepository.findByEmail(email);
+            const customerWithEmail = await this.customersRepository.findByEmail(email);
 
             if (customerWithEmail) {
                 throw new AppError("Email already in use.");
@@ -46,7 +52,7 @@ export class UpdateCustomerService {
         customer.name = name || customer.name;
         customer.email = email || customer.email;
 
-        await customersRepository.save(customer);
+        await this.customersRepository.save(customer);
 
         return customer;
     }

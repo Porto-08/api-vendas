@@ -1,9 +1,9 @@
+import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
 import AppError from "@shared/errors/AppError";
-import { getCustomRepository } from "typeorm";
-import { User } from "../typeorm/entities/User";
-import { UsersRepository } from "../typeorm/repositories/UsersRepository";
+import { User } from "../infra/typeorm/entities/User";
 import * as Yup from "yup";
 import { compare, hash } from "bcryptjs";
+import { inject, injectable } from "tsyringe";
 
 interface IRequest {
     id: string;
@@ -13,13 +13,20 @@ interface IRequest {
     oldPassword?: string;
 }
 
+@injectable()
 export class UpdateUserService {
+    constructor(
+        @inject('UsersRepository')
+        private usersRepository: IUsersRepository
+    ) { }
+
+
     public async execute({
         id,
         name,
         email,
         password,
-        oldPassword 
+        oldPassword
     }: IRequest): Promise<User | undefined> {
         const schema = Yup.object().shape({
             id: Yup.string().required(),
@@ -35,26 +42,24 @@ export class UpdateUserService {
             throw new AppError("Validation error");
         }
 
-        const usersRepository = getCustomRepository(UsersRepository);
-
-        const user = await usersRepository.findById(id);
+        const user = await this.usersRepository.findById(id);
 
         if (!user) {
             throw new AppError("User not found.");
         }
 
         if (email && email !== user.email) {
-            const userWithEmail = await usersRepository.findByEmail(email);
+            const userWithEmail = await this.usersRepository.findByEmail(email);
 
             if (userWithEmail) {
                 throw new AppError("Email already in use.");
             }
-        }        
+        }
 
-        if(password && oldPassword && user.password) {
+        if (password && oldPassword && user.password) {
             const isOldPasswordValid = await compare(oldPassword, user.password);
 
-            if(!isOldPasswordValid) {
+            if (!isOldPasswordValid) {
                 throw new AppError("Old password does not match.");
             }
 
@@ -63,7 +68,9 @@ export class UpdateUserService {
 
         user.name = name || user.name;
         user.email = email || user.email;
-        
+
+        await this.usersRepository.save(user);
+
         return user;
     }
 }

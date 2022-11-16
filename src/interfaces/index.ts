@@ -1,7 +1,7 @@
-import { User } from './../modules/users/typeorm/entities/User';
-import { Order } from './../modules/orders/typeorm/entities/Orders';
-import { Product } from './../modules/products/typeorm/entities/Product';
-import { Customer } from "@modules/customers/typeorm/entities/Customer";
+import { User } from '../modules/users/infra/typeorm/entities/User';
+import { Order } from '../modules/orders/infra/typeorm/entities/Orders';
+import { Product } from '../modules/products/infra/typeorm/entities/Product';
+import { Customer } from "@modules/customers/infra/typeorm/entities/Customer";
 
 export interface IMailContact {
     name: string;

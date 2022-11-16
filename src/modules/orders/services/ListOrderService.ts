@@ -1,19 +1,23 @@
+import { IOrdersRepository } from '@modules/orders/domain/repositories/IOrdersRepository';
 import { IPaginateOrders } from './../../../interfaces/index';
-import { OrdersRepository } from './../typeorm/repositories/OrdersRepository';
-import { Order } from './../typeorm/entities/Orders';
 import AppError from "@shared/errors/AppError";
-import { getCustomRepository } from "typeorm";
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class ListOrderService {
+    constructor(
+        @inject('OrdersRepository')
+        private ordersRepository: IOrdersRepository,
+    ) { }
+
+
     public async execute(): Promise<IPaginateOrders> {
-        const ordersRepository = getCustomRepository(OrdersRepository);
+        const orders = await this.ordersRepository.list();
 
-        const orders = await ordersRepository.createQueryBuilder().paginate();
-
-        if(!orders) {
+        if (!orders) {
             throw new AppError("Orders not found");
-        } 
+        }
 
-        return orders as IPaginateOrders;
+        return orders
     }
 }

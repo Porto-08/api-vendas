@@ -1,24 +1,34 @@
-import { ProductsRepository } from './../../products/typeorm/repositories/ProductsRepository';
-import { CustomersRepository } from './../../customers/typeorm/repositories/CustomersRepository';
-import { Order } from './../typeorm/entities/Orders';
-import { OrdersRepository } from './../typeorm/repositories/OrdersRepository';
+
+import { Order } from '../infra/typeorm/entities/Orders';
 import AppError from "@shared/errors/AppError";
-import { getCustomRepository } from "typeorm"
 import * as Yup from "yup";
+import { ICreateOrder } from '../domain/models/ICreateOrder';
+import { inject, injectable } from 'tsyringe';
+import { IOrdersRepository } from '../domain/repositories/IOrdersRepository';
+import { ICustomersRepository } from '@modules/customers/domain/repositories/ICustomersRepository';
+import { IProductsRepository } from '@modules/products/domain/repositories/IProductsRepository';
+import { RedisCache } from '@shared/cache/RedisCache';
 
 
-interface IProducts {
+export interface IProducts {
     id: string;
     quantity: number;
 }
-
-interface IRequest {
-    customer_id: string;
-    products: IProducts[];
-}
-
+@injectable()
 export class CreateOrderService {
-    public async execute({ customer_id, products }: IRequest): Promise<Order> {
+    constructor(
+        @inject('OrdersRepository')
+        private ordersRepository: IOrdersRepository,
+
+        @inject('CustomersRepository')
+        private customersRepository: ICustomersRepository,
+
+        @inject('ProductsRepository')
+        private productsRepository: IProductsRepository
+    ) { }
+
+
+    public async execute({ customer_id, products }: ICreateOrder): Promise<Order> {
         const schema = Yup.object().shape({
             customer_id: Yup.string().required(),
             products: Yup.array().of(
@@ -33,17 +43,13 @@ export class CreateOrderService {
             throw new AppError("Validation error");
         }
 
-        const ordersRepository = getCustomRepository(OrdersRepository);
-        const customersRepository = getCustomRepository(CustomersRepository);
-        const productsRepository = getCustomRepository(ProductsRepository);
-
-        const customerExists = await customersRepository.findById(customer_id);
+        const customerExists = await this.customersRepository.findById(customer_id);
 
         if (!customerExists) {
             throw new AppError("Customer not found.");
         }
 
-        const productsExists = await productsRepository.findAllByIds(products);
+        const productsExists = await this.productsRepository.findAllByIds(products);
 
         const productsExistsIds = productsExists.map(product => product.id);
 
@@ -69,7 +75,7 @@ export class CreateOrderService {
             price: productsExists.filter(product => product.id === product.id)[0].price,
         }));
 
-        const order = await ordersRepository.createOrder({
+        const order = await this.ordersRepository.create({
             customer: customerExists,
             products: serializedProducts,
         });
@@ -83,7 +89,10 @@ export class CreateOrderService {
             })
         );
 
-        await productsRepository.save(updatedProductQuantity);
+        await this.productsRepository.save(updatedProductQuantity);
+
+        const redisCache = new RedisCache();
+        await redisCache.invalidate('api-vendas-PRODUCTS_LIST');
 
         return order;
     }
